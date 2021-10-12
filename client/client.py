@@ -52,16 +52,18 @@ class MainWindow(QtWidgets.QMainWindow):
 
 # нужен отдельный поток, так как функция долгая и выполняется постоянно
     def timerEvent(self):
+        # возможно здесь нужен поток для GetMessage
+        # но тогда нужно проконтролировать, чтобы потоки закончились в нужном порядке
         msg = self.GetMessage(self.MessageID)
-        if msg is not None:
+        while msg is not None:
             msg = json.loads(msg)
             UserName = msg["UserName"]
             MessageText = msg["MessageText"]
             TimeStamp = msg["TimeStamp"]
-            msgtext =f"{TimeStamp} : <{UserName}> : {MessageText}"
+            msgtext = f"{TimeStamp} : <{UserName}> : {MessageText}"
             print(msgtext)
             self.listWidget1.insertItem(  self.MessageID, msgtext)
-            self.MessageID+=1
+            self.MessageID += 1
             msg = self.GetMessage(self.MessageID)
 
 
